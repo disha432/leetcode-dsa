@@ -1,0 +1,47 @@
+class Solution {
+public:
+    int indp[100000], outdp[100000];
+    unordered_map<int,vector<int>>adj;
+
+    void dfs1(int node, int parent, vector<int>& good){
+        indp[node] = ((good[node] == 1) ? 1 : -1);
+
+        for(auto childnode : adj[node]){
+          if(childnode == parent) continue;
+          dfs1(childnode, node, good);
+          indp[node] += max(0, indp[childnode]);
+        }
+
+    }
+
+    void dfs2(int node, int parent, vector<int>& good){
+       
+       if(parent == -1) outdp[node] = 0;
+       else{
+         int val = outdp[parent] + (indp[parent] - max(0,indp[node]));
+         outdp[node] += max(0, val);
+       }
+       for(auto childnode : adj[node]){
+          if(childnode == parent) continue;
+          dfs2(childnode, node, good); 
+       }
+
+    }
+
+    vector<int> maxSubgraphScore(int n, vector<vector<int>>& edges, vector<int>& good) {
+
+       for(auto it : edges){
+         adj[it[0]].push_back(it[1]);
+         adj[it[1]].push_back(it[0]);
+       }
+
+        dfs1(0,-1, good); //childen + self
+        dfs2(0, -1, good); // parent (upper)
+        vector<int> ans(n);
+        for(int i = 0; i<n; i++){
+            ans[i] = indp[i] + outdp[i];
+        }
+        return ans;
+
+    }
+};
