@@ -1,0 +1,40 @@
+class Solution {
+public:
+    string reverseWords(string s) {
+        int first = 0;   string ans;
+
+        int pos = s.find(' ');
+        string str_f = (pos == string::npos) ? s : s.substr(0, pos);
+
+        for(int i = 0; i<str_f.length(); i++){
+            if(str_f[i] == 'a' || str_f[i] == 'e' || str_f[i] == 'i' || str_f[i] == 'o' || str_f[i] == 'u'){
+                first++;
+            }
+        }
+        ans+=str_f;
+        stringstream ss(s);
+        string word;
+        ss >> word;
+        while(ss >> word){
+
+        int cnt = 0;  
+
+        for (char c : word) {
+            if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
+                cnt++;
+            }
+        }
+
+        if (cnt == first) {
+            reverse(word.begin(), word.end());
+        }
+
+        ans += " ";  
+        ans += word;                    
+      }
+
+        return ans;
+
+
+    }
+};
